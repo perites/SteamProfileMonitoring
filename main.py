@@ -1,5 +1,5 @@
-# TODO check if everything works in server
-# TODO add discord messages
+# TODO add discord messages just to channel
+# deploy : change to send dania in YES , change to send in General
 
 import sys
 
@@ -49,12 +49,15 @@ def main_cycle():
         bot = telebot.TeleBot(config.BOT_TOKEN, threaded=False)
         counter = 0
     except Exception as e:
-        logging.exception("error during initialization")
+        logging.critical("error during initialization, exiting")
+        logging.exception(e)
         sys.exit(1)
 
-    while True:
-        try:
-            user_has_game = check_if_has_game(get_user_games_info(config.user_to_check)['games'], config.game_to_check)
+    try:
+        while True:
+            user_all_games_info = get_user_games_info(config.user_to_check)
+            user_games_info = user_all_games_info['games']
+            user_has_game = check_if_has_game(user_games_info, config.game_to_check)
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
             if user_has_game:
                 logging.debug("HAS GAME, sending messages")
@@ -64,8 +67,7 @@ def main_cycle():
 
                 bot.send_message(chat_id=config.telegram_ids['perite'], text="ПЕРЕМОГА БУДЕ, купив купив купив")
 
-                # discord.send ( YES!  )
-                # discord.dm.send( YES! )
+                # discord.general.send ( YES!  )
 
                 logging.info("Info that user has game had been sent, exiting main loop")
                 break
@@ -76,14 +78,20 @@ def main_cycle():
             if counter > 60 * 4 or counter == 1:
                 bot.send_message(chat_id=config.telegram_ids['perite'], text="Ні, ще не купив ( ")
                 logging.debug("Sent messages because of counter")
+                if counter > 1:
+                    counter = 0
 
             time.sleep(60)
-        except Exception as e:
-            logging.exception("error in main loop, program still running")
-            bot.send_message(chat_id=config.telegram_ids['perite'],
-                             text=f"error in main loop, check logs {config.link_to_logs}")
+    except Exception as e:
+        logging.critical(f"error in main loop, user_all_games_info : '{user_all_games_info}', exiting")
+        logging.exception(e)
 
-    logging.info("Exiting program")
+        bot.send_message(chat_id=config.telegram_ids['perite'],
+                         text=f"error in main loop, check logs {config.link_to_logs}")
+
+    finally:
+        logging.info("Exiting program")
+        sys.exit(1)
 
 
 main_cycle()
