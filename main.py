@@ -1,3 +1,6 @@
+# TODO check if everything works in server
+# TODO add discord messages
+
 import sys
 
 import time
@@ -15,7 +18,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("main.log", mode='w', encoding='utf-8', )
+        logging.FileHandler(config.PATH_TO_LOGS, mode='a', encoding='utf-8', )
     ]
 )
 
@@ -47,6 +50,7 @@ def main_cycle():
         counter = 0
     except Exception as e:
         logging.exception("error during initialization")
+        sys.exit(1)
 
     while True:
         try:
@@ -54,12 +58,15 @@ def main_cycle():
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
             if user_has_game:
                 logging.debug("HAS GAME, sending messages")
+
                 bot.send_message(chat_id=config.telegram_ids['perite'],
-                                 text="Купив нарешті, сподіваюсь все інше вже допройшовб, щоб як тільки я приїду ОДРАЗУ Ж пішли")
+                                 text="О, купив нарешті, сподіваюсь все інше вже допройшов, щоб як тільки я приїду ОДРАЗУ Ж пішли !")
 
                 bot.send_message(chat_id=config.telegram_ids['perite'], text="ПЕРЕМОГА БУДЕ, купив купив купив")
+
                 # discord.send ( YES!  )
                 # discord.dm.send( YES! )
+
                 logging.info("Info that user has game had been sent, exiting main loop")
                 break
             else:
