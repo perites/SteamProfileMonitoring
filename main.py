@@ -1,9 +1,10 @@
-# TODO add discord messages just to channel
+# TODO add discord messages just to general channel
 # deploy : change to send dania in YES , change to send in General
 
 import sys
 
 import time
+import datetime
 
 import logging
 import requests
@@ -42,12 +43,15 @@ def check_if_has_game(all_user_games, game_to_check_id):
     return False
 
 
-def main_cycle():
+def main():
     logging.info("Starting main loop")
 
     try:
         bot = telebot.TeleBot(config.BOT_TOKEN, threaded=False)
         counter = 0
+        soon_end_notified = False
+
+        user_all_games_info = None
     except Exception as e:
         logging.critical("error during initialization, exiting")
         logging.exception(e)
@@ -55,43 +59,71 @@ def main_cycle():
 
     try:
         while True:
+            current_datetime = datetime.datetime.now()
             user_all_games_info = get_user_games_info(config.user_to_check)
             user_games_info = user_all_games_info['games']
             user_has_game = check_if_has_game(user_games_info, config.game_to_check)
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
+
             if user_has_game:
                 logging.debug("HAS GAME, sending messages")
 
-                bot.send_message(chat_id=config.telegram_ids['perite'],
-                                 text="О, купив нарешті, сподіваюсь все інше вже допройшов, щоб як тільки я приїду ОДРАЗУ Ж пішли !")
+                bot.send_message(chat_id=config.user_to_send_info,
+                                 text="О, купив нарешті, сподіваюсь все інше вже допройшов, щоб як тільки я приїду ОДРАЗУ Ж пішли 😈")
 
-                bot.send_message(chat_id=config.telegram_ids['perite'], text="ПЕРЕМОГА БУДЕ, купив купив купив")
+                bot.send_message(chat_id=config.admin_to_send_info, text="ПЕРЕМОГА БУДЕ, купив купив купив")
 
                 # discord.general.send ( YES!  )
 
                 logging.info("Info that user has game had been sent, exiting main loop")
                 break
+
             else:
                 counter += 1
                 logging.debug(f"+1 to counter, counter now : {counter}")
 
-            if counter > 60 * 4 or counter == 1:
-                bot.send_message(chat_id=config.telegram_ids['perite'], text="Ні, ще не купив ( ")
-                logging.debug("Sent messages because of counter")
-                if counter > 1:
-                    counter = 0
+                if counter > 60 * 4 or counter == 1:
+                    bot.send_message(chat_id=config.admin_to_send_info, text="Ні, ще не купив ( ")
+                    logging.debug("Sent messages because of counter")
+
+                    if counter > 1:
+                        counter = 1
+
+                    soon_end_notified = False
+
+                if current_datetime > datetime.datetime(2024, 7, 10, 18, 00) and not soon_end_notified:
+                    bot.send_message(chat_id=config.user_to_send_info,
+                                     text='Скоро кінець літнього розпродажу ( менш ніж за 24 години ), а ти ще не купив Cекіро, так не піде.\n Ознайомтесь: https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/')
+
+                    bot.send_message(chat_id=config.admin_to_send_info,
+                                     text="кінець розпродажу за 24 години а він ще не купив, нагадування надіслано")
+
+                    soon_end_notified = True
+
+                    logging.info("Notified about sale ending in 24 hours")
+
+                elif current_datetime > datetime.datetime(2024, 7, 11, 18, 00):
+                    bot.send_message(chat_id=config.user_to_send_info,
+                                     text='Літній розпродаж,закінчився, а ти ще не купив секіро, це зрада.\nНу що ж, тепер прийдеться купити за 2к 😈\nhttps://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/')
+
+                    bot.send_message(chat_id=config.admin_to_send_info,
+                                     text="розпродаж закінчився а він ще не купив, пахне зрадою , нагадування надіслано")
+
+                    logging.info("Notified that sale endeded(")
 
             time.sleep(60)
+
     except Exception as e:
-        logging.critical(f"error in main loop, user_all_games_info : '{user_all_games_info}', exiting")
+        logging.critical(
+            f"error in main loop, user_all_games_info : '{user_all_games_info}', exiting")
         logging.exception(e)
 
-        bot.send_message(chat_id=config.telegram_ids['perite'],
+        bot.send_message(chat_id=config.admin_to_send_info,
                          text=f"error in main loop, check logs {config.link_to_logs}")
 
-    finally:
-        logging.info("Exiting program")
-        sys.exit(1)
+    logging.info("Exiting program")
+    sys.exit(1)
 
 
-main_cycle()
+if __name__ == '__main__':
+    main()
