@@ -33,7 +33,7 @@ logging.getLogger("asyncio").setLevel(logging.ERROR)
 
 class DiscordBot:
     def __init__(self):
-        self.discord_bot = discord.Client(intents=discord.Intents.default())
+        self.discord_bot = None
 
     async def _send_message(self, channel_id, message):
         @self.discord_bot.event
@@ -50,6 +50,7 @@ class DiscordBot:
         await self.discord_bot.http._HTTPClient__session.close()
 
     def send_message(self, channel_id, message):
+        self.discord_bot = discord.Client(intents=discord.Intents.default())
         asyncio.run(self._send_message(channel_id, message))
 
 
@@ -81,6 +82,7 @@ def main():
 
         counter = 0
         soon_end_notified = False
+        sale_end_notified = False
 
     except Exception as e:
         logging.critical("error during initialization, exiting")
@@ -101,7 +103,7 @@ def main():
                 telegram_bot.send_message(chat_id=config.admin_to_send_info, text="ПЕРЕМОГА БУДЕ, купив купив купив")
 
                 discord_bot.send_message(config.discord_channel_for_info,
-                                         f"ПЕРЕМОГА БУДЕ, <@{config.user_to_send_info_discord}> купив секіро")
+                                         f"ПЕРЕМОГА БУДЕ, <@{config.user_to_send_info_discord}> купив секіро, мої вітання")
 
                 logging.info("Info that user has game had been sent, exiting main loop")
                 break
@@ -110,7 +112,7 @@ def main():
                 counter += 1
                 logging.debug(f"+1 to counter, counter now : {counter}")
 
-                if counter > 6 * 4 or counter == 1:
+                if counter > 6 * 6 or counter == 1:
                     telegram_bot.send_message(chat_id=config.admin_to_send_info, text="Ні, ще не купив ( ")
                     logging.debug("Sent messages because of counter")
 
@@ -127,16 +129,24 @@ def main():
                     telegram_bot.send_message(chat_id=config.admin_to_send_info,
                                               text="кінець розпродажу за 24 години а він ще не купив, нагадування надіслано")
 
+                    discord_bot.send_message(config.discord_channel_for_info,
+                                             message=f"Літній розпродаж закінчується менш ніж за 24 години, саме час купувати все що відкладали (<@{config.user_to_send_info_discord}>)")
+
                     soon_end_notified = True
 
                     logging.info("Notified about sale ending in 24 hours")
 
-                elif current_datetime > datetime.datetime(2024, 7, 11, 18, 00):
+                elif current_datetime > datetime.datetime(2024, 7, 11, 18, 00) and not sale_end_notified:
                     telegram_bot.send_message(chat_id=config.user_to_send_info,
                                               text='Літній розпродаж,закінчився, а ти ще не купив секіро, це зрада.\nНу що ж, тепер прийдеться купити за 2к 😈\nhttps://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/')
 
                     telegram_bot.send_message(chat_id=config.admin_to_send_info,
                                               text="розпродаж закінчився а він ще не купив, пахне зрадою , нагадування надіслано")
+
+                    discord_bot.send_message(config.discord_channel_for_info,
+                                             message=f"Літній розпродаж закінчився, а хтось (<@{config.user_to_send_info_discord}>) так і не купив що мав купити (")
+
+                    sale_end_notified = True
 
                     logging.info("Notified that sale endeded(")
 
