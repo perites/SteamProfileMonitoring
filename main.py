@@ -33,7 +33,7 @@ def get_user_games_info(steam_id):
 
     answer = answer.json()
 
-    if not answer['responce'].get("games"):
+    if not answer['response'].get("games"):
         logging.error(f'Got responce without "games" keyword : "{answer}"')
 
     return answer['response']
@@ -51,7 +51,7 @@ def main():
     logging.info("Starting main loop")
 
     try:
-        telegram_bot = telebot.TeleBot(config.BOT_TOKEN, threaded=False)
+        telegram_bot = telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False)
         counter = 0
         soon_end_notified = False
 
