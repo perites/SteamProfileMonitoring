@@ -30,9 +30,13 @@ logging.getLogger("requests").setLevel(logging.ERROR)
 def get_user_games_info(steam_id):
     answer = requests.get(
         f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.API_KEY}&steamid={steam_id}&format=json")
-    answer = answer.json()['response']
 
-    return answer
+    answer = answer.json()
+
+    if not answer['responce'].get("games"):
+        logging.error(f'Got responce without "games" keyword : "{answer}"')
+
+    return answer['response']
 
 
 def check_if_has_game(all_user_games, game_to_check_id):
@@ -61,6 +65,14 @@ def main():
         while True:
             current_datetime = datetime.datetime.now()
             user_all_games_info = get_user_games_info(config.user_to_check)
+            if not user_all_games_info:
+                logging.error("Responce came as None, waiting for 5 minutes")
+                telegram_bot.send_message(config.admin_to_send_info,
+                                          text=f"Responce came as None, waiting for 5 minutes, watch logs \n{config.link_to_logs} ")
+
+                time.sleep(60 * 5)
+                continue
+
             user_games_info = user_all_games_info['games']
             user_has_game = check_if_has_game(user_games_info, config.game_to_check)
             logging.debug(f"Fetched new info, if has game : {user_has_game}")

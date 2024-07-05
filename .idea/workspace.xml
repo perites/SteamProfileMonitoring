@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="improved error handling">
+    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="adjusted counter and sleep time">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -106,7 +106,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720113751991</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="adjusted counter and sleep time">
+      <option name="closed" value="true" />
+      <created>1720170384583</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1720170384583</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +132,7 @@
     <MESSAGE value="first commit" />
     <MESSAGE value="changed log path" />
     <MESSAGE value="improved error handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="improved error handling" />
+    <MESSAGE value="adjusted counter and sleep time" />
+    <option name="LAST_COMMIT_MESSAGE" value="adjusted counter and sleep time" />
   </component>
 </project>
