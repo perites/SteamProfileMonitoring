@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="updated requirements.txt">
+    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="added sending messages to discord when notifying because of dates&#10;adjusted counter">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -138,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720190173233</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="added sending messages to discord when notifying because of dates&#10;adjusted counter">
+      <option name="closed" value="true" />
+      <created>1720211936513</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1720211936513</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -175,6 +183,7 @@
     <MESSAGE value="added handling bad responses from steam API" />
     <MESSAGE value="checking if user has game using directly steam API, updated code accordingly&#10;&#10;adjusted counter" />
     <MESSAGE value="updated requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated requirements.txt" />
+    <MESSAGE value="added sending messages to discord when notifying because of dates&#10;adjusted counter" />
+    <option name="LAST_COMMIT_MESSAGE" value="added sending messages to discord when notifying because of dates&#10;adjusted counter" />
   </component>
 </project>

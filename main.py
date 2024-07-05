@@ -34,6 +34,7 @@ logging.getLogger("asyncio").setLevel(logging.ERROR)
 class DiscordBot:
     def __init__(self):
         self.discord_bot = None
+        self.logger = logging.getLogger("discord-bot")
 
     async def _send_message(self, channel_id, message):
         @self.discord_bot.event
@@ -41,8 +42,9 @@ class DiscordBot:
             channel = self.discord_bot.get_channel(channel_id)
             if channel:
                 await channel.send(message)
+                self.logger.debug(f"message to channel {channel_id} sent")
             else:
-                print("Channel not found")
+                self.logger.error(f"Channel {channel_id} not found")
 
             await self.discord_bot.close()
 
