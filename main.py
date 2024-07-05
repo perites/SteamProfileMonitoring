@@ -1,4 +1,3 @@
-# TODO add discord messages just to general channel
 # deploy : change to send dania in YES , change to send in General
 import sys
 
@@ -9,8 +8,10 @@ import time
 import datetime
 import json
 import urllib.parse
+import asyncio
 
 import telebot
+import discord
 
 import config
 
@@ -26,6 +27,30 @@ logging.basicConfig(
 
 logging.getLogger("urllib3").setLevel(logging.ERROR)
 logging.getLogger("requests").setLevel(logging.ERROR)
+logging.getLogger("discord").setLevel(logging.ERROR)
+logging.getLogger("asyncio").setLevel(logging.ERROR)
+
+
+class DiscordBot:
+    def __init__(self):
+        self.discord_bot = discord.Client(intents=discord.Intents.default())
+
+    async def _send_message(self, channel_id, message):
+        @self.discord_bot.event
+        async def on_ready():
+            channel = self.discord_bot.get_channel(channel_id)
+            if channel:
+                await channel.send(message)
+            else:
+                print("Channel not found")
+
+            await self.discord_bot.close()
+
+        await self.discord_bot.start(config.DISCORD_BOT_TOKEN)
+        await self.discord_bot.http._HTTPClient__session.close()
+
+    def send_message(self, channel_id, message):
+        asyncio.run(self._send_message(channel_id, message))
 
 
 def check_if_user_has_game(steam_id, game_id):
@@ -41,8 +66,8 @@ def check_if_user_has_game(steam_id, game_id):
 
     game_count = answer_json['response'].get('game_count')
     if game_count is None:
-        logging.error(f"Got hollow response : '{answer_json}', waiting for 15 minutes")
-        time.sleep(60 * 15)
+        logging.error(f"Got hollow response : '{answer_json}', waiting for 1 hour")
+        time.sleep(60 * 60)
 
     return True if game_count == 1 else False
 
@@ -52,6 +77,7 @@ def main():
 
     try:
         telegram_bot = telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False)
+        discord_bot = DiscordBot()
 
         counter = 0
         soon_end_notified = False
@@ -74,7 +100,8 @@ def main():
 
                 telegram_bot.send_message(chat_id=config.admin_to_send_info, text="ПЕРЕМОГА БУДЕ, купив купив купив")
 
-                # discord.general.send ( YES!  )
+                discord_bot.send_message(config.discord_channel_for_info,
+                                         f"ПЕРЕМОГА БУДЕ, <@{config.user_to_send_info_discord}> купив секіро")
 
                 logging.info("Info that user has game had been sent, exiting main loop")
                 break
