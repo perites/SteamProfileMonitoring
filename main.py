@@ -1,13 +1,14 @@
 # TODO add discord messages just to general channel
 # deploy : change to send dania in YES , change to send in General
-
 import sys
-
-import time
-import datetime
 
 import logging
 import requests
+
+import time
+import datetime
+import json
+import urllib.parse
 
 import telebot
 
@@ -27,24 +28,23 @@ logging.getLogger("urllib3").setLevel(logging.ERROR)
 logging.getLogger("requests").setLevel(logging.ERROR)
 
 
-def get_user_games_info(steam_id):
+def check_if_user_has_game(steam_id, game_id):
+    request_json = urllib.parse.quote(
+        json.dumps({
+            "appids_filter": [game_id],
+            "steamid": steam_id
+        }))
+
     answer = requests.get(
-        f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.API_KEY}&steamid={steam_id}&format=json")
+        f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.API_KEY}&format=json&input_json={request_json}")
+    answer_json = answer.json()
 
-    answer = answer.json()
+    game_count = answer_json['response'].get('game_count')
+    if game_count is None:
+        logging.error(f"Got hollow response : '{answer_json}', waiting for 15 minutes")
+        time.sleep(60 * 15)
 
-    if not answer['response'].get("games"):
-        logging.error(f'Got response without "games" keyword : "{answer}"')
-
-    return answer['response']
-
-
-def check_if_has_game(all_user_games, game_to_check_id):
-    for game_info in all_user_games:
-        if game_info['appid'] == game_to_check_id:
-            return True
-
-    return False
+    return True if game_count == 1 else False
 
 
 def main():
@@ -52,10 +52,10 @@ def main():
 
     try:
         telegram_bot = telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False)
+
         counter = 0
         soon_end_notified = False
 
-        user_all_games_info = None
     except Exception as e:
         logging.critical("error during initialization, exiting")
         logging.exception(e)
@@ -63,18 +63,7 @@ def main():
 
     try:
         while True:
-            current_datetime = datetime.datetime.now()
-            user_all_games_info = get_user_games_info(config.user_to_check)
-            if not user_all_games_info:
-                logging.error("Responce came as None, waiting for 5 minutes")
-                telegram_bot.send_message(config.admin_to_send_info,
-                                          text=f"Responce came as None, waiting for 5 minutes, watch logs \n{config.link_to_logs} ")
-
-                time.sleep(60 * 5)
-                continue
-
-            user_games_info = user_all_games_info['games']
-            user_has_game = check_if_has_game(user_games_info, config.game_to_check)
+            user_has_game = check_if_user_has_game(config.user_to_check, config.game_to_check)
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
 
             if user_has_game:
@@ -94,7 +83,7 @@ def main():
                 counter += 1
                 logging.debug(f"+1 to counter, counter now : {counter}")
 
-                if counter > 30 * 4 or counter == 1:
+                if counter > 6 * 4 or counter == 1:
                     telegram_bot.send_message(chat_id=config.admin_to_send_info, text="Ні, ще не купив ( ")
                     logging.debug("Sent messages because of counter")
 
@@ -103,6 +92,7 @@ def main():
 
                     soon_end_notified = False
 
+                current_datetime = datetime.datetime.now()
                 if current_datetime > datetime.datetime(2024, 7, 10, 18, 00) and not soon_end_notified:
                     telegram_bot.send_message(chat_id=config.user_to_send_info,
                                               text='Скоро кінець літнього розпродажу ( менш ніж за 24 години ), а ти ще не купив Cекіро, так не піде.\n Ознайомтесь: https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/')
@@ -123,15 +113,15 @@ def main():
 
                     logging.info("Notified that sale endeded(")
 
-            time.sleep(60 * 2)
+            time.sleep(60 * 10)
 
     except Exception as e:
         logging.critical(
-            f"error in main loop, user_all_games_info : '{user_all_games_info}', exiting")
+            f"error in main loop, exiting")
         logging.exception(e)
 
         telegram_bot.send_message(chat_id=config.admin_to_send_info,
-                                  text=f"error in main loop, check logs {config.link_to_logs}")
+                                  text=f"error in main loop : {e}\ncheck logs {config.link_to_logs}")
 
     logging.info("Exiting program")
     sys.exit(1)
