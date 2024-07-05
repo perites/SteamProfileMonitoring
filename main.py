@@ -34,7 +34,7 @@ def get_user_games_info(steam_id):
     answer = answer.json()
 
     if not answer['response'].get("games"):
-        logging.error(f'Got responce without "games" keyword : "{answer}"')
+        logging.error(f'Got response without "games" keyword : "{answer}"')
 
     return answer['response']
 
