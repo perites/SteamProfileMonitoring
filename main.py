@@ -1,4 +1,3 @@
-# deploy : change to send dania in YES , change to send in General
 import sys
 
 import logging
@@ -52,8 +51,12 @@ class DiscordBot:
         await self.discord_bot.http._HTTPClient__session.close()
 
     def send_message(self, channel_id, message):
-        self.discord_bot = discord.Client(intents=discord.Intents.default())
-        asyncio.run(self._send_message(channel_id, message))
+        try:
+            self.discord_bot = discord.Client(intents=discord.Intents.default())
+            asyncio.run(self._send_message(channel_id, message))
+            
+        except Exception as e:
+            self.logger.exception(f"Error while sending message to {channel_id}")
 
 
 def check_if_user_has_game(steam_id, game_id):
@@ -85,6 +88,7 @@ def main():
         counter = 0
         soon_end_notified = False
         sale_end_notified = False
+        bought_game_notified = False
 
     except Exception as e:
         logging.critical("error during initialization, exiting")
@@ -96,7 +100,7 @@ def main():
             user_has_game = check_if_user_has_game(config.user_to_check, config.game_to_check)
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
 
-            if user_has_game:
+            if user_has_game and not bought_game_notified:
                 logging.debug("HAS GAME, sending messages")
 
                 telegram_bot.send_message(chat_id=config.user_to_send_info,
@@ -107,8 +111,9 @@ def main():
                 discord_bot.send_message(config.discord_channel_for_info,
                                          f"ПЕРЕМОГА БУДЕ, <@{config.user_to_send_info_discord}> купив секіро, мої вітання")
 
-                logging.info("Info that user has game had been sent, exiting main loop")
-                break
+                logging.info("Info that user has game had been sent")
+
+                bought_game_notified = True
 
             else:
                 counter += 1
@@ -120,8 +125,6 @@ def main():
 
                     if counter > 1:
                         counter = 1
-
-                    soon_end_notified = False
 
                 current_datetime = datetime.datetime.now()
                 if current_datetime > datetime.datetime(2024, 7, 10, 18, 00) and not soon_end_notified:
@@ -162,8 +165,8 @@ def main():
         telegram_bot.send_message(chat_id=config.admin_to_send_info,
                                   text=f"error in main loop : {e}\ncheck logs {config.link_to_logs}")
 
-    logging.info("Exiting program")
-    sys.exit(1)
+        logging.info("Exiting program")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
