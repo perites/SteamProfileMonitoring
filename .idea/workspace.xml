@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="added logger for DiscordBot class">
+    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="improved error handling &#10;program not exiting at successful scenario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -154,7 +154,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720214841889</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="improved error handling &#10;program not exiting at successful scenario">
+      <option name="closed" value="true" />
+      <created>1720249949326</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1720249949326</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -193,6 +201,7 @@
     <MESSAGE value="updated requirements.txt" />
     <MESSAGE value="added sending messages to discord when notifying because of dates&#10;adjusted counter" />
     <MESSAGE value="added logger for DiscordBot class" />
-    <option name="LAST_COMMIT_MESSAGE" value="added logger for DiscordBot class" />
+    <MESSAGE value="improved error handling &#10;program not exiting at successful scenario" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved error handling &#10;program not exiting at successful scenario" />
   </component>
 </project>

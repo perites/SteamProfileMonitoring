@@ -54,7 +54,7 @@ class DiscordBot:
         try:
             self.discord_bot = discord.Client(intents=discord.Intents.default())
             asyncio.run(self._send_message(channel_id, message))
-            
+
         except Exception as e:
             self.logger.exception(f"Error while sending message to {channel_id}")
 
@@ -115,7 +115,7 @@ def main():
 
                 bought_game_notified = True
 
-            else:
+            elif not user_has_game:
                 counter += 1
                 logging.debug(f"+1 to counter, counter now : {counter}")
 
