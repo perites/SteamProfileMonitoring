@@ -101,7 +101,7 @@ def main():
             logging.debug(f"Fetched new info, if has game : {user_has_game}")
 
             if user_has_game and not bought_game_notified:
-                logging.debug("HAS GAME, sending messages")
+                logging.info("HAS GAME, sending messages")
 
                 telegram_bot.send_message(chat_id=config.user_to_send_info,
                                           text="О, купив нарешті, сподіваюсь все інше вже допройшов, щоб як тільки я приїду ОДРАЗУ Ж пішли 😈")
@@ -121,7 +121,7 @@ def main():
 
                 if counter > 6 * 6 or counter == 1:
                     telegram_bot.send_message(chat_id=config.admin_to_send_info, text="Ні, ще не купив ( ")
-                    logging.debug("Sent messages because of counter")
+                    logging.info("Sent messages because of counter")
 
                     if counter > 1:
                         counter = 1
