@@ -2,7 +2,7 @@ import logging
 import texts
 
 
-class Message:
+class MessagesManager:
     def __init__(self, telegram_bot, discord_bot,
                  user_telegram_id, user_discord_id,
                  admin_telegram_id,
@@ -31,9 +31,9 @@ class Message:
         self.discord_bot.send_message(self.discord_channel_id, message=message)
         self.logger.debug("message to discord sent")
 
-    def _send_message(self, text_for_user=None, text_for_admin=None, text_for_dchannel=None):
+    def _send_messages(self, text_for_user=None, text_for_admin=None, text_for_dchannel=None):
         self.logger.info(
-            f"going to notify :"
+            f"going to send to: "
             f"{'user' if text_for_user else ''} "
             f"{'admin' if text_for_admin else ''} "
             f"{'dchannel' if text_for_dchannel else ''}")
@@ -52,4 +52,4 @@ class Message:
     def process_event(self, event, *f_args, **f_kwargs):
         text = texts.get_event_text(event, *f_args, **f_kwargs)
 
-        self._send_message(**text)
+        self._send_messages(**text)

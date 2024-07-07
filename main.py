@@ -11,7 +11,7 @@ import telebot
 import config
 
 from user_to_check import UserToCheck
-from message import Message
+from messages_manager import MessagesManager
 from discrod_bot import DiscordBot
 from file_class import File
 
@@ -40,10 +40,11 @@ def main():
                                 config.user_discord_id_to_send_info,
                                 notified_file=File(config.PATH_TO_NOTIFIED_FILE))
 
-    message = Message(telegram_bot=telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False), discord_bot=DiscordBot(),
-                      user_telegram_id=user_to_check.telegram_id, user_discord_id=user_to_check.discord_id,
-                      admin_telegram_id=config.admin_telegram_id,
-                      discord_channel_id=config.discord_channel_for_info)
+    msg_manager = MessagesManager(telegram_bot=telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False),
+                                  discord_bot=DiscordBot(),
+                                  user_telegram_id=user_to_check.telegram_id, user_discord_id=user_to_check.discord_id,
+                                  admin_telegram_id=config.admin_telegram_id,
+                                  discord_channel_id=config.discord_channel_for_info)
 
     sale_end_datetime = datetime.datetime(2024, 7, 7, 23, 8)
     soon_end_datetime = sale_end_datetime - datetime.timedelta(minutes=2)
@@ -57,20 +58,20 @@ def main():
         if user_has_game and not user_to_check.notified_data.bought_game_notified:
             logging.info("HAS GAME, sending messages")
 
-            message.process_event("game_bought", user_to_check.discord_id)
-
-            logging.info("Info that user has game had been sent")
+            msg_manager.process_event("game_bought", user_to_check.discord_id)
 
             user_to_check.notified_data.bought_game_notified = True
             user_to_check.update_notified_data()
+
+            logging.info("Info that user has game had been sent")
 
         elif not user_has_game:
             counter += 1
             logging.debug(f"+1 to counter, counter now : {counter}")
 
             if counter > 6 * 6 or counter == 1:
-                logging.info("Sending message because of counter")
-                message.process_event("counter_message")
+                logging.info("Sending msg_manager because of counter")
+                msg_manager.process_event("counter_message")
 
                 if counter > 1:
                     counter = 1
@@ -79,7 +80,7 @@ def main():
             if current_datetime > soon_end_datetime and not user_to_check.notified_data.soon_end_notified:
                 logging.info("Sale end soon, sending messages")
 
-                message.process_event("sale_ends_soon", user_to_check.discord_id)
+                msg_manager.process_event("sale_ends_soon", user_to_check.discord_id)
 
                 user_to_check.notified_data.soon_end_notified = True
                 user_to_check.update_notified_data()
@@ -89,7 +90,7 @@ def main():
             elif current_datetime > sale_end_datetime and not user_to_check.notified_data.sale_ended_notified:
                 logging.info("Sale ended, sending messages")
 
-                message.process_event("sale_ended", user_to_check.discord_id)
+                msg_manager.process_event("sale_ended", user_to_check.discord_id)
 
                 user_to_check.notified_data.sale_ended_notified = True
                 user_to_check.update_notified_data()
