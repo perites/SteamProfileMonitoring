@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="created class to manage sending messages&#10;created dataclass for text for messages &#10;added TelegramBotHandler to root logger&#10;moved classes to different files">
+    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="updated naming">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/message.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages_manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720387177446</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="updated naming">
+      <option name="closed" value="true" />
+      <created>1720387673253</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1720387673253</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -241,6 +248,7 @@
     <MESSAGE value="updated logging levels" />
     <MESSAGE value="added error handling for requests" />
     <MESSAGE value="created class to manage sending messages&#10;created dataclass for text for messages &#10;added TelegramBotHandler to root logger&#10;moved classes to different files" />
-    <option name="LAST_COMMIT_MESSAGE" value="created class to manage sending messages&#10;created dataclass for text for messages &#10;added TelegramBotHandler to root logger&#10;moved classes to different files" />
+    <MESSAGE value="updated naming" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated naming" />
   </component>
 </project>

@@ -17,7 +17,7 @@ from file_class import File
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] : %(message)s  ||[LOGGER:%(name)s] [FUNC:%(funcName)s] [FILE:%(filename)s]',
-    datefmt='%H:%M:%S',
+    datefmt=' %H:%M:%S',
     level=logging.DEBUG,
     handlers=[
         logging.StreamHandler(sys.stdout),
@@ -46,8 +46,8 @@ def main():
                                   admin_telegram_id=config.admin_telegram_id,
                                   discord_channel_id=config.discord_channel_for_info)
 
-    sale_end_datetime = datetime.datetime(2024, 7, 7, 23, 8)
-    soon_end_datetime = sale_end_datetime - datetime.timedelta(minutes=2)
+    sale_end_datetime = datetime.datetime(2024, 7, 11, 18, 00)
+    soon_end_datetime = sale_end_datetime - datetime.timedelta(hours=24)
 
     counter = 0
 
