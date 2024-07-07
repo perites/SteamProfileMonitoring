@@ -66,8 +66,19 @@ def check_if_user_has_game(steam_id, game_id):
             "steamid": steam_id
         }))
 
-    answer = requests.get(
-        f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.API_KEY}&format=json&input_json={request_json}")
+    answer = None
+    error_counter = 0
+    while not answer:
+        try:
+            answer = requests.get(
+                f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.STEAM_API_KEY}&format=json&input_json={request_json}")
+        except ConnectionError as e:
+            logging.exception("Error while making request to SteamAPI")
+            error_counter += 1
+            if error_counter >= 5:
+                raise Exception("Connection error for 5 times, exiting loop")
+            time.sleep(30)
+
     answer_json = answer.json()
 
     game_count = answer_json['response'].get('game_count')
