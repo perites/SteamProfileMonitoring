@@ -17,7 +17,7 @@ from file_class import File
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] : %(message)s  ||[LOGGER:%(name)s] [FUNC:%(funcName)s] [FILE:%(filename)s]',
-    datefmt=' %H:%M:%S',
+    datefmt='%d-%m-%y %H:%M:%S',
     level=logging.DEBUG,
     handlers=[
         logging.StreamHandler(sys.stdout),
@@ -70,7 +70,7 @@ def main():
             logging.debug(f"+1 to counter, counter now : {counter}")
 
             if counter > 6 * 6 or counter == 1:
-                logging.info("Sending msg_manager because of counter")
+                logging.info("Sending message because of counter")
                 msg_manager.process_event("counter_message")
 
                 if counter > 1:
