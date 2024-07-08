@@ -30,7 +30,7 @@ game_bought = EventTexts(
 
     text_for_admin="ПЕРЕМОГА БУДЕ, купив купив купив",
 
-    text_for_dchannel="ПЕРЕМОГА БУДЕ, <@{}> купив секіро, мої вітання",
+    text_for_dchannel="ПЕРЕМОГА БУДЕ, <@{}> купив секіро",
 
     need_format=['text_for_dchannel']
 )
