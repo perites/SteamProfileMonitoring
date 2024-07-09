@@ -10,7 +10,7 @@ class File:
         try:
             open(self.path_to_file)
         except FileNotFoundError as file_not_found_exception:
-            self.logger.critical(f"Invalid path to file : {self.path_to_file}, exiting")
+            self.logger.critical(f"Invalid path to file : {self.path_to_file}")
             raise file_not_found_exception
 
     def read_data(self):

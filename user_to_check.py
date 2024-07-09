@@ -7,19 +7,32 @@ import urllib.parse
 from dataclasses import dataclass
 
 import config
+from utils.json_file import File
 
 
+@dataclass
+class NotifiedData:
+    bought_game_notified: bool = None
+    soon_end_notified: bool = None
+    sale_ended_notified: bool = None
+
+
+@dataclass
 class UserToCheck:
-    def __init__(self, steam_id, telegram_id, discord_id, notified_file):
-        self.logger = logging.getLogger("user-check")
+    steam_id: str
+    telegram_id: str
+    discord_id: int
 
-        self.steam_id = steam_id
-        self.telegram_id = telegram_id
-        self.discord_id = discord_id
+    path_to_notified_file: str
+    notified_file: File = None
+    notified_data: NotifiedData = None
 
-        self.notified_file = notified_file
-        self.notified_data = None
-        self.get_notified_data()
+    logger: logging.Logger = None
+
+    def __post_init__(self):
+        self.notified_file = File(self.path_to_notified_file)
+        self.notified_data = NotifiedData(**self.notified_file.read_data())
+        self.logger = logging.getLogger(f"user-{self.steam_id}")
 
     def check_if_has_game(self, game_id):
         request_json = urllib.parse.quote(
@@ -28,6 +41,16 @@ class UserToCheck:
                 "steamid": self.steam_id
             }))
 
+        answer = self._send_request(request_json).json()
+
+        game_count = answer['response'].get('game_count')
+        if game_count is None:
+            self.logger.error(f"Got hollow response : '{answer}', waiting for 1 hour")
+            time.sleep(60 * 60)
+
+        return True if game_count == 1 else False
+
+    def _send_request(self, request_json):
         answer = None
         error_counter = 0
         while not answer:
@@ -42,25 +65,7 @@ class UserToCheck:
 
                 time.sleep(30)
 
-        answer_json = answer.json()
+        return answer
 
-        game_count = answer_json['response'].get('game_count')
-        if game_count is None:
-            self.logger.error(f"Got hollow response : '{answer_json}', waiting for 1 hour")
-            time.sleep(60 * 60)
-
-        return True if game_count == 1 else False
-
-    def get_notified_data(self):
-        raw_notified_data = self.notified_file.read_data()
-        self.notified_data = NotifiedData(**raw_notified_data)
-
-    def update_notified_data(self):
+    def update_notified_file(self):
         self.notified_file.write_data(self.notified_data.__dict__)
-
-
-@dataclass
-class NotifiedData:
-    bought_game_notified: bool
-    soon_end_notified: bool
-    sale_ended_notified: bool

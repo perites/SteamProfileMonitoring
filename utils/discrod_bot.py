@@ -3,12 +3,11 @@ import asyncio
 
 import discord
 
-import config
-
 
 class DiscordBot:
-    def __init__(self):
+    def __init__(self, discord_bot_token):
         self.discord_bot = None
+        self.discord_bot_token = discord_bot_token
         self.logger = logging.getLogger("discord-bot")
 
     async def _send_message(self, channel_id, message):
@@ -23,7 +22,7 @@ class DiscordBot:
 
             await self.discord_bot.close()
 
-        await self.discord_bot.start(config.DISCORD_BOT_TOKEN)
+        await self.discord_bot.start(self.discord_bot_token)
         await self.discord_bot.http._HTTPClient__session.close()
 
     def send_message(self, channel_id, message):

@@ -1,19 +1,15 @@
 import sys
 
 import logging
-import handlers
+from utils import logging_handlers
 
 import time
 import datetime
 
-import telebot
-
 import config
 
 from user_to_check import UserToCheck
-from messages_manager import MessagesManager
-from discrod_bot import DiscordBot
-from file_class import File
+from messages import Messages
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] : %(message)s  ||[LOGGER:%(name)s] [FUNC:%(funcName)s] [FILE:%(filename)s]',
@@ -22,7 +18,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.FileHandler(config.PATH_TO_LOGS, mode='a', encoding='utf-8'),
-        handlers.TelegramBotHandler(config.TELEGRAM_BOT_TOKEN, config.admin_telegram_id, logging.ERROR)
+        logging_handlers.TelegramBotHandler(config.TELEGRAM_BOT_TOKEN, config.admin_telegram_id, logging.ERROR)
     ]
 )
 
@@ -38,13 +34,16 @@ def main():
     user_to_check = UserToCheck(config.user_steam_id_to_check,
                                 config.user_telegram_id_to_send_info,
                                 config.user_discord_id_to_send_info,
-                                notified_file=File(config.PATH_TO_NOTIFIED_FILE))
+                                path_to_notified_file=config.PATH_TO_NOTIFIED_FILE)
 
-    msg_manager = MessagesManager(telegram_bot=telebot.TeleBot(config.TELEGRAM_BOT_TOKEN, threaded=False),
-                                  discord_bot=DiscordBot(),
-                                  user_telegram_id=user_to_check.telegram_id, user_discord_id=user_to_check.discord_id,
-                                  admin_telegram_id=config.admin_telegram_id,
-                                  discord_channel_id=config.discord_channel_for_info)
+    messages = Messages(telegram_bot_token=config.TELEGRAM_BOT_TOKEN,
+                        discord_bot_token=config.DISCORD_BOT_TOKEN)
+
+    def notify_all(event):
+        messages.send_telegram(user_to_check.telegram_id, f"{event}_user")
+        messages.send_telegram(config.admin_telegram_id, f"{event}_admin")
+        messages.send_discord_channel(config.discord_channel_for_info, f"{event}_dchannel",
+                                      user_to_check.discord_id)
 
     sale_end_datetime = datetime.datetime(2024, 7, 11, 18, 00)
     soon_end_datetime = sale_end_datetime - datetime.timedelta(hours=24)
@@ -58,10 +57,10 @@ def main():
         if user_has_game and not user_to_check.notified_data.bought_game_notified:
             logging.info("HAS GAME, sending messages")
 
-            msg_manager.process_event("game_bought", user_to_check.discord_id)
+            notify_all("game_bought")
 
             user_to_check.notified_data.bought_game_notified = True
-            user_to_check.update_notified_data()
+            user_to_check.update_notified_file()
 
             logging.info("Info that user has game had been sent")
 
@@ -71,8 +70,8 @@ def main():
 
             if counter > 6 * 6 or counter == 1:
                 logging.info("Sending message because of counter")
-                msg_manager.process_event("counter_message")
 
+                messages.send_telegram(config.admin_telegram_id, "counter_message_admin")
                 if counter > 1:
                     counter = 1
 
@@ -80,20 +79,20 @@ def main():
             if current_datetime > soon_end_datetime and not user_to_check.notified_data.soon_end_notified:
                 logging.info("Sale end soon, sending messages")
 
-                msg_manager.process_event("sale_ends_soon", user_to_check.discord_id)
+                notify_all("sale_ends_soon")
 
                 user_to_check.notified_data.soon_end_notified = True
-                user_to_check.update_notified_data()
+                user_to_check.update_notified_file()
 
                 logging.info("All notified about sale ending in 24 hours")
 
             elif current_datetime > sale_end_datetime and not user_to_check.notified_data.sale_ended_notified:
                 logging.info("Sale ended, sending messages")
 
-                msg_manager.process_event("sale_ended", user_to_check.discord_id)
+                notify_all("sale_ended")
 
                 user_to_check.notified_data.sale_ended_notified = True
-                user_to_check.update_notified_data()
+                user_to_check.update_notified_file()
 
                 logging.info("All notified that sale ended(")
 

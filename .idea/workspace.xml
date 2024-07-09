@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="fix wrong sale end datetime">
+    <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="changed texts.py">
+      <change afterPath="$PROJECT_DIR$/messages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/discrod_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/discrod_bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/json_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/logging_handlers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts.py" beforeDir="false" afterPath="$PROJECT_DIR$/texts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_to_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_to_check.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +50,9 @@
     &quot;accountId&quot;: &quot;02c996df-a906-4d98-aea5-5cf4c4eb8aa9&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -57,9 +67,11 @@
     "Python.config.executor": "Run",
     "Python.main.executor": "Run",
     "Python.messages_text.executor": "Run",
+    "Python.scratch_1.executor": "Run",
     "Python.text.executor": "Run",
+    "Python.user_to_check.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "lighter-version",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   },
   "keyToStringList": {
@@ -68,6 +80,11 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/utils" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -212,7 +229,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720395083024</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="updated logging1">
+      <option name="closed" value="true" />
+      <created>1720395964594</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1720395964594</updated>
+    </task>
+    <task id="LOCAL-00018" summary="changed texts.py">
+      <option name="closed" value="true" />
+      <created>1720424676234</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1720424676234</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -258,6 +291,9 @@
     <MESSAGE value="created class to manage sending messages&#10;created dataclass for text for messages &#10;added TelegramBotHandler to root logger&#10;moved classes to different files" />
     <MESSAGE value="updated naming" />
     <MESSAGE value="fix wrong sale end datetime" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix wrong sale end datetime" />
+    <MESSAGE value="updated logging" />
+    <MESSAGE value="updated logging" />
+    <MESSAGE value="changed texts.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed texts.py" />
   </component>
 </project>
