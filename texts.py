@@ -11,7 +11,9 @@ texts = {
     "sale_ended_admin": "розпродаж закінчився а він ще не купив, пахне зрадою , нагадування надіслано",
     "sale_ended_dchannel": "Літній розпродаж закінчився, а хтось (<@{}>) так і не купив що мав купити",
 
-    "counter_message_admin": "Ні, ще не купив ("
+    "counter_message_admin": "Ні, ще не купив (",
+
+    "already_notified_game_bought_admin": "вирубай СТОП\nhttps://www.pythonanywhere.com/user/perite/tasks_tab/"
 }
 
 

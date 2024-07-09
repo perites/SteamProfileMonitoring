@@ -6,14 +6,14 @@ import time
 import urllib.parse
 from dataclasses import dataclass
 
-import config
+import constants
 import utils.json_file as file
 
 
 @dataclass
 class NotifiedData:
     bought_game_notified: bool = None
-    soon_end_notified: bool = None
+    sale_soon_ends_notified: bool = None
     sale_ended_notified: bool = None
 
 
@@ -57,7 +57,7 @@ class UserToCheck:
         for _ in range(max_retries):
             try:
                 answer = requests.get(
-                    f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.STEAM_API_KEY}&format=json&input_json={request_json}")
+                    f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={constants.STEAM_API_KEY}&format=json&input_json={request_json}")
                 return answer
 
             except Exception:
