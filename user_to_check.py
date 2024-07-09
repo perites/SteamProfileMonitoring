@@ -7,7 +7,7 @@ import urllib.parse
 from dataclasses import dataclass
 
 import config
-from utils.json_file import File
+import utils.json_file as file
 
 
 @dataclass
@@ -24,13 +24,13 @@ class UserToCheck:
     discord_id: int
 
     path_to_notified_file: str
-    notified_file: File = None
+    notified_file: file.File = None
     notified_data: NotifiedData = None
 
     logger: logging.Logger = None
 
     def __post_init__(self):
-        self.notified_file = File(self.path_to_notified_file)
+        self.notified_file = file.File(self.path_to_notified_file)
         self.notified_data = NotifiedData(**self.notified_file.read_data())
         self.logger = logging.getLogger(f"user-{self.steam_id}")
 

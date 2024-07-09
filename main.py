@@ -1,15 +1,17 @@
 import sys
 
 import logging
-from utils import logging_handlers
+from utils.logging_handlers import TelegramBotHandler
 
 import time
 import datetime
 
-import config
+from utils.discrod_bot import DiscordBot
+from utils.telegram_bot import TelegramBot
 
-from user_to_check import UserToCheck
-from messages import Messages
+import config
+import user_to_check as utch
+import texts
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] : %(message)s  ||[LOGGER:%(name)s] [FUNC:%(funcName)s] [FILE:%(filename)s]',
@@ -18,7 +20,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.FileHandler(config.PATH_TO_LOGS, mode='a', encoding='utf-8'),
-        logging_handlers.TelegramBotHandler(config.TELEGRAM_BOT_TOKEN, config.admin_telegram_id, logging.ERROR)
+        TelegramBotHandler(config.TELEGRAM_BOT_TOKEN, config.admin_telegram_id, logging.ERROR)
     ]
 )
 
@@ -31,19 +33,21 @@ logging.getLogger("asyncio").setLevel(logging.ERROR)
 def main():
     logging.info("Starting main loop")
 
-    user_to_check = UserToCheck(config.user_steam_id_to_check,
-                                config.user_telegram_id_to_send_info,
-                                config.user_discord_id_to_send_info,
-                                path_to_notified_file=config.PATH_TO_NOTIFIED_FILE)
+    user_to_check = utch.UserToCheck(config.user_steam_id_to_check,
+                                     config.user_telegram_id_to_send_info,
+                                     config.user_discord_id_to_send_info,
+                                     path_to_notified_file=config.PATH_TO_NOTIFIED_FILE)
 
-    messages = Messages(telegram_bot_token=config.TELEGRAM_BOT_TOKEN,
-                        discord_bot_token=config.DISCORD_BOT_TOKEN)
+    telegram_bot = TelegramBot(config.TELEGRAM_BOT_TOKEN)
+    discord_bot = DiscordBot(config.DISCORD_BOT_TOKEN)
 
     def notify_all(event):
-        messages.send_telegram(user_to_check.telegram_id, f"{event}_user")
-        messages.send_telegram(config.admin_telegram_id, f"{event}_admin")
-        messages.send_discord_channel(config.discord_channel_for_info, f"{event}_dchannel",
-                                      user_to_check.discord_id)
+        telegram_bot.send_message(user_to_check.telegram_id, message=texts.get_text(f"{event}_user"))
+        
+        telegram_bot.send_message(config.admin_telegram_id, message=texts.get_text(f"{event}_admin"))
+
+        discord_bot.send_message_to_channel(config.discord_channel_for_info, message=texts.get_text(f"{event}_dchannel",
+                                                                                                    user_to_check.discord_id))
 
     sale_end_datetime = datetime.datetime(2024, 7, 11, 18, 00)
     soon_end_datetime = sale_end_datetime - datetime.timedelta(hours=24)
@@ -71,7 +75,7 @@ def main():
             if counter > 6 * 6 or counter == 1:
                 logging.info("Sending message because of counter")
 
-                messages.send_telegram(config.admin_telegram_id, "counter_message_admin")
+                telegram_bot.send_message(config.admin_telegram_id, text=texts.get_text("counter_message_admin"))
                 if counter > 1:
                     counter = 1
 
