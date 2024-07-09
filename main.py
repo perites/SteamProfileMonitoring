@@ -43,62 +43,64 @@ def main():
 
     def notify_all(event):
         telegram_bot.send_message(user_to_check.telegram_id, message=texts.get_text(f"{event}_user"))
-        
+
         telegram_bot.send_message(config.admin_telegram_id, message=texts.get_text(f"{event}_admin"))
 
         discord_bot.send_message_to_channel(config.discord_channel_for_info, message=texts.get_text(f"{event}_dchannel",
                                                                                                     user_to_check.discord_id))
 
     sale_end_datetime = datetime.datetime(2024, 7, 11, 18, 00)
-    soon_end_datetime = sale_end_datetime - datetime.timedelta(hours=24)
+    sale_soon_end_datetime = sale_end_datetime - datetime.timedelta(hours=24)
 
     counter = 0
 
     while True:
         user_has_game = user_to_check.check_if_has_game(config.game_to_check)
-        logging.debug(f"Fetched new info, if has game : {user_has_game}")
+        logging.debug(f"Fetched new info, if has game: {user_has_game}")
 
-        if user_has_game and not user_to_check.notified_data.bought_game_notified:
-            logging.info("HAS GAME, sending messages")
+        if user_has_game:
+            if user_to_check.notified_data.bought_game_notified:
+                logging.debug("User bought game, already notified")
+                return
+
+            logging.info("User bought game")
 
             notify_all("game_bought")
-
             user_to_check.notified_data.bought_game_notified = True
             user_to_check.update_notified_file()
 
-            logging.info("Info that user has game had been sent")
+            logging.info("Info that user bought game sent")
+
 
         elif not user_has_game:
             counter += 1
-            logging.debug(f"+1 to counter, counter now : {counter}")
+            logging.debug(f"Counter +1, counter now: {counter}")
 
             if counter > 6 * 6 or counter == 1:
                 logging.info("Sending message because of counter")
 
-                telegram_bot.send_message(config.admin_telegram_id, text=texts.get_text("counter_message_admin"))
+                telegram_bot.send_message(config.admin_telegram_id, message=texts.get_text("counter_message_admin"))
                 if counter > 1:
                     counter = 1
 
             current_datetime = datetime.datetime.now()
-            if current_datetime > soon_end_datetime and not user_to_check.notified_data.soon_end_notified:
-                logging.info("Sale end soon, sending messages")
+            if current_datetime > sale_soon_end_datetime and not user_to_check.notified_data.soon_end_notified:
+                logging.info("Sale ends soon, sending messages")
 
                 notify_all("sale_ends_soon")
-
                 user_to_check.notified_data.soon_end_notified = True
                 user_to_check.update_notified_file()
 
-                logging.info("All notified about sale ending in 24 hours")
+                logging.info("All notified about sale ends soon")
 
             elif current_datetime > sale_end_datetime and not user_to_check.notified_data.sale_ended_notified:
                 logging.info("Sale ended, sending messages")
 
                 notify_all("sale_ended")
-
                 user_to_check.notified_data.sale_ended_notified = True
                 user_to_check.update_notified_file()
 
-                logging.info("All notified that sale ended(")
+                logging.info("All notified about sale ended(")
 
         time.sleep(60 * 10)
 

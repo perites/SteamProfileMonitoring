@@ -51,21 +51,20 @@ class UserToCheck:
         return True if game_count == 1 else False
 
     def _send_request(self, request_json):
-        answer = None
-        error_counter = 0
-        while not answer:
+        max_retries = 5
+        retry_delay = 30
+
+        for _ in range(max_retries):
             try:
                 answer = requests.get(
                     f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={config.STEAM_API_KEY}&format=json&input_json={request_json}")
-            except ConnectionError:
+                return answer
+
+            except Exception:
                 self.logger.exception("Error while making request to SteamAPI")
-                error_counter += 1
-                if error_counter >= 5:
-                    raise Exception("Connection error for 5 times, exiting loop")
+                time.sleep(retry_delay)
 
-                time.sleep(30)
-
-        return answer
+        raise Exception("Connection error for 5 times, exiting loop")
 
     def update_notified_file(self):
         self.notified_file.write_data(self.notified_data.__dict__)

@@ -16,7 +16,7 @@ class DiscordBot:
             channel = self.discord_bot.get_channel(channel_id)
             if channel:
                 await channel.send(message)
-                self.logger.debug(f"message to channel {channel_id} sent")
+                self.logger.debug(f"Message to channel {channel_id} sent")
             else:
                 self.logger.error(f"Channel {channel_id} not found")
 
@@ -31,4 +31,4 @@ class DiscordBot:
             asyncio.run(self._send_message_to_channel(channel_id, message))
 
         except Exception:
-            self.logger.exception(f"Error while sending message to {channel_id}, continuing")
+            self.logger.exception(f"Error while sending message to {channel_id}")
