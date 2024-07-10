@@ -82,3 +82,9 @@ deploy_config = Config(
 
     sale_end_datetime=datetime.datetime(2024, 7, 11, 18, 00),
     sale_soon_ends_diff=datetime.timedelta(hours=24))
+
+CONFIGS = {
+    "has_game_TEST_config": has_game_TEST_config,
+    "no_game_TEST_config": no_game_TEST_config,
+    "deploy_config": deploy_config
+}

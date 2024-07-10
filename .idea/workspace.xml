@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="db44af0d-311a-4f40-9606-423b2335bfeb" name="Changes" comment="updated logging messages &#10;updated retries logic in user_to_check.py">
-      <change afterPath="$PROJECT_DIR$/configs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/args_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts.py" beforeDir="false" afterPath="$PROJECT_DIR$/texts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_to_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_to_check.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +60,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.args_parser.executor": "Run",
     "Python.config.executor": "Run",
     "Python.configs.executor": "Run",
     "Python.main.executor": "Run",
@@ -70,7 +70,7 @@
     "Python.text.executor": "Run",
     "Python.user_to_check.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "improved-config",
+    "git-widget-placeholder": "master",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   },
   "keyToStringList": {

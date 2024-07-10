@@ -10,8 +10,7 @@ from utils.discrod_bot import DiscordBot
 from utils.telegram_bot import TelegramBot
 
 import constants
-from config import RUN_CONFIG as config
-
+import args_parser
 import user_to_check as utch
 import texts
 
@@ -108,7 +107,9 @@ def main():
 
 if __name__ == '__main__':
     try:
+        config = args_parser.parse_args()
         main()
     except Exception as main_loop_exception:
-        logging.critical("Error in main(), exiting file")
+        logging.critical("Error file, exiting")
         logging.exception(main_loop_exception)
+        sys.exit(1)
